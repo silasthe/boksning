@@ -2,126 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Adaptive Boxing Trainer</title>
+  <title>Adaptive Boxing Interval Trainer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color-scheme: dark;
-      --bg: #05070b;
-      --card: #111827;
-      --card-soft: #0b1220;
+      --bg: #020617;
+      --card: #020617;
+      --card-alt: #020617;
       --accent: #3b82f6;
-      --accent-soft: rgba(59, 130, 246, 0.12);
-      --accent-strong: rgba(59, 130, 246, 0.24);
+      --accent-soft: rgba(59,130,246,0.14);
+      --accent-strong: rgba(59,130,246,0.35);
       --border: #1f2937;
       --text: #f9fafb;
       --muted: #9ca3af;
-      --danger: #ef4444;
       --easy: #22c55e;
       --hard: #f97316;
+      --danger: #ef4444;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      background: radial-gradient(circle at top, #111827 0, #020617 50%, #000 100%);
-      color: var(--text);
       min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, #0b1120 0, #020617 50%, #000 100%);
+      color: var(--text);
       display: flex;
-      align-items: stretch;
       justify-content: center;
+      align-items: stretch;
     }
 
-    .app-wrapper {
+    .app {
       width: 100%;
-      max-width: 960px;
+      max-width: 980px;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .app-header {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
     }
 
-    .app-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .title {
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
     }
 
     .badge {
-      font-size: 0.65rem;
-      text-transform: uppercase;
+      font-size: .7rem;
       padding: 2px 8px;
       border-radius: 999px;
       border: 1px solid var(--accent-strong);
-      background: rgba(15, 23, 42, 0.8);
       color: var(--accent);
+      background: rgba(15,23,42,.9);
+      text-transform: uppercase;
     }
 
     .nav {
       display: flex;
       gap: 6px;
-      align-items: center;
       flex-wrap: wrap;
     }
 
     .nav button {
       border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,.9);
+      color: var(--muted);
       padding: 6px 12px;
-      font-size: 0.8rem;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.8);
-      color: var(--muted);
+      font-size: .8rem;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .nav button.nav-active {
+    .nav button.active {
       background: var(--accent-soft);
-      color: var(--accent);
       border-color: var(--accent-strong);
-    }
-
-    .nav button:hover {
-      border-color: var(--accent);
-    }
-
-    .user-label {
-      font-size: 0.8rem;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .user-label span {
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .chip {
-      border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 0.7rem;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--muted);
+      color: var(--accent);
     }
 
     main {
@@ -131,10 +100,10 @@
     }
 
     .card {
-      background: radial-gradient(circle at top left, #111827 0, #020617 60%);
+      background: radial-gradient(circle at top left, #020617 0, #020617 70%);
       border-radius: 16px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.9);
       padding: 16px;
     }
 
@@ -142,8 +111,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
       gap: 8px;
+      margin-bottom: 8px;
     }
 
     .card-title {
@@ -152,24 +121,24 @@
     }
 
     .card-subtitle {
-      font-size: 0.8rem;
+      font-size: .8rem;
       color: var(--muted);
     }
 
-    .section-grid {
+    .grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
       gap: 12px;
     }
 
-    @media (max-width: 720px) {
-      .section-grid {
-        grid-template-columns: minmax(0, 1fr);
+    @media (max-width: 780px) {
+      .grid {
+        grid-template-columns: minmax(0,1fr);
       }
     }
 
     label {
-      font-size: 0.8rem;
+      font-size: .8rem;
       color: var(--muted);
       display: block;
       margin-bottom: 4px;
@@ -180,36 +149,38 @@
       padding: 8px 10px;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15,23,42,.95);
       color: var(--text);
-      font-size: 0.9rem;
+      font-size: .9rem;
     }
 
-    input[type="text"]::placeholder {
-      color: #6b7280;
+    input[type="text"]::placeholder { color: #6b7280; }
+
+    input[type="range"] {
+      width: 100%;
     }
 
     .btn {
-      border: none;
       border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 0.9rem;
+      border: none;
+      padding: 8px 18px;
+      font-size: .9rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       font-weight: 500;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      background: linear-gradient(135deg,#2563eb,#4f46e5);
       color: white;
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 10px 25px rgba(37,99,235,.55);
     }
 
     .btn-primary:disabled {
-      opacity: 0.5;
+      opacity: .5;
       cursor: default;
       box-shadow: none;
     }
@@ -227,170 +198,131 @@
     }
 
     .btn-easy {
-      background: rgba(34, 197, 94, 0.12);
+      background: rgba(34,197,94,.12);
       color: var(--easy);
-      border: 1px solid rgba(34, 197, 94, 0.4);
+      border: 1px solid rgba(34,197,94,.45);
     }
 
     .btn-just {
-      background: rgba(59, 130, 246, 0.12);
+      background: rgba(59,130,246,.12);
       color: var(--accent);
-      border: 1px solid rgba(59, 130, 246, 0.4);
+      border: 1px solid rgba(59,130,246,.45);
     }
 
     .btn-hard {
-      background: rgba(249, 115, 22, 0.12);
+      background: rgba(249,115,22,.12);
       color: var(--hard);
-      border: 1px solid rgba(249, 115, 22, 0.4);
+      border: 1px solid rgba(249,115,22,.5);
     }
 
-    .pill-group {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-
-    .pill {
+    .chip {
       border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.75rem;
       border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15,23,42,.95);
       color: var(--muted);
-      display: inline-flex;
+      font-size: .75rem;
+      padding: 2px 8px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
       align-items: center;
-      gap: 6px;
-    }
-
-    .pill-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--accent);
-    }
-
-    .pill-dot-muted {
-      background: #6b7280;
     }
 
     .gear-row {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .gear-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.85rem;
+      font-size: .85rem;
       color: var(--muted);
       padding: 4px 8px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
       border: 1px solid var(--border);
+      background: rgba(15,23,42,.95);
       width: fit-content;
     }
 
-    .gear-item input {
-      accent-color: var(--accent);
-    }
+    .gear-item input { accent-color: var(--accent); }
 
-    .difficulty-slider {
-      margin-top: 6px;
-    }
-
-    .difficulty-slider input[type="range"] {
-      width: 100%;
-    }
-
-    .difficulty-line {
-      font-size: 0.8rem;
+    .small {
+      font-size: .78rem;
       color: var(--muted);
-      margin-top: 4px;
     }
 
-    .timer {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+    .timer-block {
+      text-align: right;
     }
 
     .timer-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
+      font-size: .75rem;
       text-transform: uppercase;
+      letter-spacing: .15em;
       color: var(--muted);
     }
 
-    .training-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: var(--muted);
+    .timer {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: .15em;
     }
 
-    .combo-box {
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid var(--accent-strong);
-      background: radial-gradient(circle at top left, var(--accent-soft) 0, #020617 60%);
-    }
-
-    .combo-label {
-      font-size: 0.75rem;
+    .segment-label {
+      font-size: .8rem;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: .12em;
       color: var(--muted);
       margin-bottom: 4px;
     }
 
-    .combo-numbers {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 1.4rem;
+    .segment-name {
+      font-size: 1.05rem;
       font-weight: 600;
       margin-bottom: 4px;
     }
 
-    .combo-text {
-      font-size: 0.9rem;
-      color: var(--text);
+    .progress-text {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: 4px;
     }
 
-    .combo-count {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 6px;
+    .combo-box {
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--accent-strong);
+      background: radial-gradient(circle at top left,var(--accent-soft) 0,#020617 60%);
+    }
+
+    .combo-numbers {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .combo-text {
+      font-size: .9rem;
+      margin-top: 2px;
     }
 
     .feedback-panel {
-      margin-top: 12px;
-      padding-top: 10px;
+      margin-top: 10px;
+      padding-top: 8px;
       border-top: 1px dashed var(--border);
       display: none;
     }
 
-    .feedback-panel.visible {
-      display: block;
-    }
-
-    .feedback-title {
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: var(--muted);
-    }
-
-    .feedback-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .feedback-panel.visible { display: block; }
 
     .history-list {
       list-style: none;
@@ -399,17 +331,16 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      max-height: 240px;
+      font-size: .8rem;
+      max-height: 210px;
       overflow-y: auto;
     }
 
     .history-item {
-      padding: 6px 8px;
       border-radius: 10px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(31, 41, 55, 0.9);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,.95);
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -418,262 +349,218 @@
     .history-main {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       gap: 6px;
+      align-items: center;
     }
 
-    .history-tags {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .history-tag {
-      padding: 1px 6px;
+    .tag {
       border-radius: 999px;
       border: 1px solid var(--border);
-      font-size: 0.7rem;
+      padding: 1px 6px;
+      font-size: .7rem;
     }
 
-    .history-tag-easy {
-      border-color: var(--easy);
-      color: var(--easy);
-    }
+    .tag-easy { border-color: var(--easy); color: var(--easy); }
+    .tag-hard { border-color: var(--hard); color: var(--hard); }
 
-    .history-tag-hard {
-      border-color: var(--hard);
-      color: var(--hard);
-    }
+    .muted { color: var(--muted); }
 
-    .muted {
-      color: var(--muted);
-    }
-
-    .text-accent {
-      color: var(--accent);
-    }
-
-    .text-easy {
-      color: var(--easy);
-    }
-
-    .text-hard {
-      color: var(--hard);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .login-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-width: 320px;
-    }
-
-    .login-hint {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+    .hidden { display: none !important; }
 
     .divider {
       border-top: 1px dashed var(--border);
-      margin: 8px 0;
+      margin: 10px 0;
     }
   </style>
 </head>
 <body>
-<div class="app-wrapper">
-
-  <header class="app-header">
-    <div class="app-title">
+<div class="app">
+  <header>
+    <div class="title">
       🥊 Adaptive Boxing Trainer
-      <span class="badge">local only</span>
+      <span class="badge">Local only</span>
     </div>
     <div class="nav">
-      <button id="nav-login" class="nav-active">Login</button>
+      <button id="nav-login" class="active">Login</button>
       <button id="nav-settings">Settings</button>
       <button id="nav-training">Training</button>
-      <button id="nav-logout" class="btn-ghost" style="padding: 4px 10px; font-size: 0.75rem;">Logout</button>
+      <button id="nav-logout" class="btn-ghost" style="font-size:.75rem;padding:4px 10px;">Logout</button>
     </div>
   </header>
 
   <main>
-    <!-- LOGIN VIEW -->
+    <!-- LOGIN -->
     <section id="view-login" class="card">
       <div class="card-header">
         <div>
           <div class="card-title">Login / Sign-up</div>
-          <div class="card-subtitle">User accounts are stored in your browser using localStorage.</div>
+          <div class="card-subtitle">Profiles are stored in this browser using localStorage.</div>
         </div>
       </div>
-      <div class="login-layout">
+      <div style="max-width:320px;display:flex;flex-direction:column;gap:8px;">
         <div>
           <label for="username-input">Username</label>
           <input id="username-input" type="text" placeholder="e.g. silas_boxing">
         </div>
         <button id="btn-login" class="btn btn-primary">Enter gym</button>
-        <div class="login-hint">
-          If the username does not exist, a new profile will be created automatically.
-          No passwords, no server – everything is saved only in this browser.
+        <div class="small">
+          If the username doesn’t exist, a new profile is created. No passwords, no server.
         </div>
       </div>
     </section>
 
-    <!-- MAIN GRID: SETTINGS + TRAINING+HISTORY -->
-    <section id="main-grid" class="section-grid hidden">
-
-      <!-- SETTINGS CARD -->
-      <section id="view-settings" class="card">
+    <!-- MAIN GRID -->
+    <section id="main-grid" class="grid hidden">
+      <!-- SETTINGS -->
+      <section class="card">
         <div class="card-header">
           <div>
             <div class="card-title">Settings</div>
-            <div class="card-subtitle">Gear & difficulty for the current user.</div>
+            <div class="card-subtitle">Gear, difficulty & session length.</div>
           </div>
-          <div class="user-label">
-            User:
-            <span id="settings-current-user">–</span>
+          <div class="small">
+            User: <span id="settings-user" style="font-weight:600;">–</span>
           </div>
         </div>
 
         <div>
-          <strong style="font-size:0.8rem;">Gear</strong>
+          <strong style="font-size:.85rem;">Gear</strong>
           <div class="gear-row">
             <label class="gear-item">
-              <input type="checkbox" id="gear-gloves">
-              <span>Boxing gloves</span>
+              <input type="checkbox" id="gear-gloves" checked>
+              Boxing gloves
             </label>
             <label class="gear-item">
               <input type="checkbox" id="gear-bag">
-              <span>Heavy bag</span>
+              Heavy bag
             </label>
             <label class="gear-item">
               <input type="checkbox" id="gear-weights">
-              <span>Weights (dumbbells etc.)</span>
+              Weights (dumbbells etc.)
             </label>
+          </div>
+          <div class="small" style="margin-top:4px;">
+            Gear changes the plan: with gloves + bag you get bag rounds; with only gloves you get gloved shadowboxing; with weights some intervals become weighted.
           </div>
         </div>
 
         <div class="divider"></div>
 
         <div>
-          <strong style="font-size:0.8rem;">Difficulty</strong>
-          <div class="difficulty-slider">
-            <label for="difficulty-slider">
-              Current level:
-              <span id="difficulty-value" class="text-accent">–</span> / 10
-            </label>
-            <input type="range" id="difficulty-slider" min="1" max="10" value="3">
-          </div>
+          <strong style="font-size:.85rem;">Difficulty</strong>
+          <label for="difficulty-slider">
+            Level: <span id="difficulty-value">3</span> / 10
+          </label>
+          <input type="range" id="difficulty-slider" min="1" max="10" value="3">
+          <div id="difficulty-preview" class="small"></div>
+        </div>
 
-          <div id="difficulty-preview" class="difficulty-line">
-            <!-- Filled by JS -->
-          </div>
+        <div class="divider"></div>
 
-          <div class="pill-group" style="margin-top:8px;">
-            <div class="pill">
-              <span class="pill-dot"></span>
-              <span id="preview-combo-length">Combos: –</span>
-            </div>
-            <div class="pill">
-              <span class="pill-dot pill-dot-muted"></span>
-              <span id="preview-pace">Pace: –</span>
-            </div>
-            <div class="pill">
-              <span class="pill-dot pill-dot-muted"></span>
-              <span id="preview-round">Round: –</span>
-            </div>
+        <div>
+          <strong style="font-size:.85rem;">Session length</strong>
+          <label for="session-length">
+            Total training: <span id="session-length-value">20</span> minutes
+          </label>
+          <input type="range" id="session-length" min="10" max="60" step="5" value="20">
+          <div class="small">
+            App will auto-build warm-up, bodyweight intervals (push-ups, sit-ups, squats etc.)
+            and intense boxing intervals to fill this time.
           </div>
         </div>
       </section>
 
-      <!-- TRAINING + HISTORY CARD -->
+      <!-- TRAINING + HISTORY -->
       <section class="card">
-
-        <!-- TRAINING VIEW -->
-        <section id="view-training">
+        <!-- TRAINING -->
+        <section>
           <div class="card-header">
             <div>
               <div class="card-title">Training</div>
-              <div class="card-subtitle" id="training-subtitle">Login to start a round.</div>
+              <div class="card-subtitle" id="training-subtitle">Login, adjust settings, then start a session.</div>
             </div>
             <div class="timer-block">
-              <div class="timer-label">Round timer</div>
-              <div class="timer" id="round-timer">00:00</div>
+              <div class="timer-label">Session timer</div>
+              <div class="timer" id="session-timer">00:00</div>
             </div>
           </div>
 
-          <div class="training-meta">
-            <div class="chip" id="training-gear-label">No user</div>
-            <div class="chip" id="training-difficulty-label">Difficulty: –</div>
-            <div class="chip" id="training-mode-label">Mode: –</div>
+          <div class="row" style="margin-bottom:6px;">
+            <span class="chip" id="chip-gear">No user</span>
+            <span class="chip" id="chip-difficulty">Difficulty: –</span>
+            <span class="chip" id="chip-length">– min</span>
           </div>
 
-          <div class="combo-box" id="combo-box">
-            <div class="combo-label">Current combo</div>
+          <div class="segment-label">Current segment</div>
+          <div class="segment-name" id="segment-name">–</div>
+          <div class="small" id="segment-detail">Press “Start session” to generate an interval plan.</div>
+          <div class="progress-text" id="segment-progress">Segment – / –</div>
+
+          <div class="combo-box" id="combo-container">
+            <div class="segment-label">Boxing combo</div>
             <div class="combo-numbers" id="combo-numbers">–</div>
-            <div class="combo-text" id="combo-text">Press “Start round” to generate combos.</div>
-            <div class="combo-count" id="combo-count">Combos this round: 0</div>
+            <div class="combo-text" id="combo-text">Combos appear here during boxing intervals.</div>
+            <div class="small" id="combo-count">Combos this session: 0</div>
           </div>
 
-          <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-            <button id="btn-start-round" class="btn btn-primary" disabled>Start round</button>
-            <button id="btn-stop-round" class="btn btn-ghost" disabled>Stop</button>
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="btn-start-session" class="btn btn-primary" disabled>Start session</button>
+            <button id="btn-stop-session" class="btn btn-ghost" disabled>Stop</button>
           </div>
 
           <div class="feedback-panel" id="feedback-panel">
-            <div class="feedback-title">How did that round feel?</div>
-            <div class="feedback-buttons">
+            <div class="small" style="margin-bottom:4px;">How did that session feel overall?</div>
+            <div class="row">
               <button class="btn btn-easy" data-feedback="easy">Too easy</button>
               <button class="btn btn-just" data-feedback="just">Just right</button>
               <button class="btn btn-hard" data-feedback="hard">Too hard</button>
             </div>
-            <div class="difficulty-line" id="feedback-note"></div>
+            <div class="small" id="feedback-note" style="margin-top:4px;"></div>
           </div>
 
-          <div class="difficulty-line" style="margin-top:10px;">
-            Combos are generated with simple rules: open with jabs/lead punches, avoid back-to-back heavy right-side power shots (2,4,6,8,10), but allow repeated jabs/feints.
+          <div class="small" style="margin-top:10px;">
+            Combos always start with jab (1) or cross (2) and avoid back-to-back right-side power shots (2,4,6,8,10).
+            The app reads the numbers out loud (“1, 2, 3…”) so you can memorise your own number system.
           </div>
         </section>
 
-        <div class="divider" style="margin-top:14px;"></div>
+        <div class="divider"></div>
 
-        <!-- HISTORY VIEW -->
-        <section id="view-history">
+        <!-- HISTORY -->
+        <section>
           <div class="card-header" style="margin-bottom:4px;">
             <div>
-              <div class="card-title" style="font-size:0.95rem;">History</div>
+              <div class="card-title" style="font-size:.95rem;">History</div>
               <div class="card-subtitle">Last sessions for this user.</div>
             </div>
           </div>
           <ul id="history-list" class="history-list"></ul>
-          <div id="history-empty" class="muted" style="font-size:0.8rem; margin-top:4px;">
-            No rounds logged yet.
-          </div>
+          <div id="history-empty" class="small">No sessions logged yet.</div>
         </section>
-
       </section>
     </section>
   </main>
 </div>
 
 <script>
-  // Storage key for all users
-  const STORAGE_KEY = 'boxingTrainerUsers_v1';
+  // Storage key
+  const STORAGE_KEY = 'boxingIntervalUsers_v1';
 
-  // All in-memory users, loaded from localStorage
+  // In-memory state
   let users = {};
   let currentUser = null;
 
-  // Training state
-  let roundIntervalId = null;
-  let comboIntervalId = null;
-  let currentRoundRemaining = 0;
-  let currentDifficultyConfig = null;
-  let combosThisRound = 0;
+  // Session / interval state
+  let plan = []; // array of segments
+  let currentSegmentIndex = -1;
+  let segmentRemaining = 0;
+  let sessionRemaining = 0;
+  let sessionTotal = 0;
+  let sessionTimerId = null;
+  let comboTimerId = null;
+  let combosThisSession = 0;
 
-  // Punch mapping for display & speech
+  // Punch logic
   const punchMap = {
     1: 'jab',
     2: 'cross',
@@ -684,13 +571,12 @@
     7: 'left uppercut',
     8: 'right uppercut',
     9: 'left low jab',
-    10: 'right low jab'
+    10:'right low jab'
   };
-
-  const rightPower = [2, 4, 6, 8, 10];
+  const rightPower = [2,4,6,8,10];
   const allPunches = [1,2,3,4,5,6,7,8,9,10];
 
-  // DOM references
+  // DOM
   const navLogin = document.getElementById('nav-login');
   const navSettings = document.getElementById('nav-settings');
   const navTraining = document.getElementById('nav-training');
@@ -698,14 +584,11 @@
 
   const viewLogin = document.getElementById('view-login');
   const mainGrid = document.getElementById('main-grid');
-  const viewSettings = document.getElementById('view-settings');
-  const viewTraining = document.getElementById('view-training');
 
   const usernameInput = document.getElementById('username-input');
   const btnLogin = document.getElementById('btn-login');
 
-  const settingsCurrentUser = document.getElementById('settings-current-user');
-
+  const settingsUser = document.getElementById('settings-user');
   const gearGloves = document.getElementById('gear-gloves');
   const gearBag = document.getElementById('gear-bag');
   const gearWeights = document.getElementById('gear-weights');
@@ -714,124 +597,152 @@
   const difficultyValue = document.getElementById('difficulty-value');
   const difficultyPreview = document.getElementById('difficulty-preview');
 
-  const previewComboLength = document.getElementById('preview-combo-length');
-  const previewPace = document.getElementById('preview-pace');
-  const previewRound = document.getElementById('preview-round');
+  const sessionLengthSlider = document.getElementById('session-length');
+  const sessionLengthValue = document.getElementById('session-length-value');
 
   const trainingSubtitle = document.getElementById('training-subtitle');
-  const roundTimerEl = document.getElementById('round-timer');
-  const trainingGearLabel = document.getElementById('training-gear-label');
-  const trainingDifficultyLabel = document.getElementById('training-difficulty-label');
-  const trainingModeLabel = document.getElementById('training-mode-label');
+  const sessionTimerEl = document.getElementById('session-timer');
+  const segmentNameEl = document.getElementById('segment-name');
+  const segmentDetailEl = document.getElementById('segment-detail');
+  const segmentProgressEl = document.getElementById('segment-progress');
 
+  const chipGear = document.getElementById('chip-gear');
+  const chipDifficulty = document.getElementById('chip-difficulty');
+  const chipLength = document.getElementById('chip-length');
+
+  const comboContainer = document.getElementById('combo-container');
   const comboNumbersEl = document.getElementById('combo-numbers');
   const comboTextEl = document.getElementById('combo-text');
   const comboCountEl = document.getElementById('combo-count');
 
-  const btnStartRound = document.getElementById('btn-start-round');
-  const btnStopRound = document.getElementById('btn-stop-round');
+  const btnStartSession = document.getElementById('btn-start-session');
+  const btnStopSession = document.getElementById('btn-stop-session');
 
   const feedbackPanel = document.getElementById('feedback-panel');
-  const feedbackButtons = feedbackPanel.querySelectorAll('button[data-feedback]');
   const feedbackNote = document.getElementById('feedback-note');
+  const feedbackButtons = feedbackPanel.querySelectorAll('button[data-feedback]');
 
   const historyList = document.getElementById('history-list');
   const historyEmpty = document.getElementById('history-empty');
 
-  // Load users from localStorage
+  // -------- Storage helpers --------
   function loadUsers() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       users = raw ? JSON.parse(raw) : {};
     } catch (e) {
-      console.error('Failed to load users', e);
+      console.error('loadUsers error', e);
       users = {};
     }
   }
-
   function saveUsers() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
   }
 
-  // Create a new user object
   function createUser(username) {
     return {
       username,
-      gear: {
-        gloves: true,
-        bag: false,
-        weights: false
-      },
+      gear: { gloves: true, bag: false, weights: false },
       difficultyLevel: 3,
+      sessionMinutes: 20,
       history: []
     };
   }
 
-  // Clamp difficulty to [1, 10]
-  function clampDifficulty(level) {
-    let l = parseInt(level, 10);
+  function clampDifficulty(lvl) {
+    let l = parseInt(lvl, 10);
     if (Number.isNaN(l)) l = 3;
     if (l < 1) l = 1;
     if (l > 10) l = 10;
     return l;
   }
 
-  // Derive parameters from difficulty level
+  // difficulty → combo / pace parameters
   function getDifficultyConfig(level) {
     const l = clampDifficulty(level);
     let comboMin, comboMax;
-    if (l <= 3) {
-      comboMin = 2;
-      comboMax = 3;
-    } else if (l <= 6) {
-      comboMin = 3;
-      comboMax = 4;
-    } else if (l <= 8) {
-      comboMin = 4;
-      comboMax = 5;
-    } else {
-      comboMin = 5;
-      comboMax = 6;
-    }
+    if (l <= 3) { comboMin = 2; comboMax = 3; }
+    else if (l <= 6) { comboMin = 3; comboMax = 4; }
+    else if (l <= 8) { comboMin = 4; comboMax = 5; }
+    else { comboMin = 5; comboMax = 6; }
 
-    // Pace: 4s -> ~1.6s as difficulty increases
-    let paceSec = 4 - (l - 1) * 0.25;
-    paceSec = Math.max(1.6, Math.min(4, paceSec));
-
-    // Round length: 90s -> 180s
-    const roundSec = 90 + (l - 1) * 10;
-
-    return { level: l, comboMin, comboMax, paceSec, roundSec };
+    let paceSec = 4 - (l - 1) * 0.25;      // 4s → ~1.6s
+    paceSec = Math.max(1.5, Math.min(4, paceSec));
+    return { level: l, comboMin, comboMax, paceSec };
   }
 
-  // Update difficulty preview UI
-  function updateDifficultyPreview(level) {
-    const cfg = getDifficultyConfig(level);
+  // -------- UI helpers --------
+  function setNavActive(btn) {
+    [navLogin, navSettings, navTraining].forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function showLoginView() {
+    viewLogin.classList.remove('hidden');
+    mainGrid.classList.add('hidden');
+    setNavActive(navLogin);
+  }
+
+  function showMainView(target) {
+    if (!currentUser) { showLoginView(); return; }
+    viewLogin.classList.add('hidden');
+    mainGrid.classList.remove('hidden');
+    setNavActive(target === 'settings' ? navSettings : navTraining);
+  }
+
+  function formatSeconds(sec) {
+    const s = Math.max(0, Math.floor(sec));
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`;
+  }
+
+  function speak(text) {
+    if (!('speechSynthesis' in window)) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1.05;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  }
+
+  function updateDifficultyPreviewUI() {
+    if (!currentUser) return;
+    const cfg = getDifficultyConfig(currentUser.difficultyLevel);
+    difficultyValue.textContent = cfg.level;
     difficultyPreview.textContent =
-      `Level ${cfg.level}: ${cfg.comboMin}–${cfg.comboMax} punches per combo, ` +
-      `${cfg.paceSec.toFixed(1)}s between combos, ${cfg.roundSec}s round.`;
-
-    previewComboLength.textContent = `Combos: ${cfg.comboMin}–${cfg.comboMax} punches`;
-    previewPace.textContent = `Pace: ~${cfg.paceSec.toFixed(1)}s between combos`;
-    previewRound.textContent = `Round: ${cfg.roundSec} seconds`;
+      `Combos: ${cfg.comboMin}–${cfg.comboMax} punches, `
+      + `~${cfg.paceSec.toFixed(1)}s between combos.`;
   }
 
-  // History UI
-  function updateHistoryUI() {
+  function updateSessionLengthUI() {
+    if (!currentUser) return;
+    sessionLengthValue.textContent = currentUser.sessionMinutes;
+    chipLength.textContent = `${currentUser.sessionMinutes} min`;
+  }
+
+  function updateGearChips() {
     if (!currentUser) {
-      historyList.innerHTML = '';
-      historyEmpty.classList.remove('hidden');
+      chipGear.textContent = 'No user';
       return;
     }
-    const hist = currentUser.history || [];
-    if (!hist.length) {
+    const g = currentUser.gear;
+    let txt;
+    if (g.gloves && g.bag) txt = 'Heavy bag + gloves';
+    else if (g.gloves) txt = 'Gloves, no bag';
+    else txt = 'No gloves (shadowboxing)';
+    if (g.weights) txt += ', weights';
+    chipGear.textContent = txt;
+  }
+
+  function updateHistoryUI() {
+    if (!currentUser || !currentUser.history.length) {
       historyList.innerHTML = '';
       historyEmpty.classList.remove('hidden');
       return;
     }
     historyEmpty.classList.add('hidden');
     historyList.innerHTML = '';
-
+    const hist = currentUser.history;
     for (let i = hist.length - 1; i >= 0; i--) {
       const h = hist[i];
       const li = document.createElement('li');
@@ -842,28 +753,36 @@
 
       const left = document.createElement('div');
       left.textContent = new Date(h.date).toLocaleString();
-      const right = document.createElement('div');
-      right.className = 'history-tags';
 
-      const tagLevel = document.createElement('div');
-      tagLevel.className = 'history-tag';
-      tagLevel.textContent = `L${h.levelAfter}`;
-      right.appendChild(tagLevel);
+      const tags = document.createElement('div');
+      tags.style.display = 'flex';
+      tags.style.gap = '4px';
+      tags.style.flexWrap = 'wrap';
 
-      const tagFeedback = document.createElement('div');
-      let tfClass = 'history-tag';
-      if (h.feedback === 'easy') tfClass += ' history-tag-easy';
-      if (h.feedback === 'hard') tfClass += ' history-tag-hard';
-      tagFeedback.className = tfClass;
-      tagFeedback.textContent = h.feedback;
-      right.appendChild(tagFeedback);
+      const tLevel = document.createElement('div');
+      tLevel.className = 'tag';
+      tLevel.textContent = `L${h.levelAfter}`;
+
+      const tLen = document.createElement('div');
+      tLen.className = 'tag';
+      tLen.textContent = `${h.minutes} min`;
+
+      const tFb = document.createElement('div');
+      tFb.className = 'tag';
+      if (h.feedback === 'easy') tFb.classList.add('tag-easy');
+      if (h.feedback === 'hard') tFb.classList.add('tag-hard');
+      tFb.textContent = h.feedback;
+
+      tags.appendChild(tLevel);
+      tags.appendChild(tLen);
+      tags.appendChild(tFb);
 
       main.appendChild(left);
-      main.appendChild(right);
+      main.appendChild(tags);
 
       const sub = document.createElement('div');
       sub.className = 'muted';
-      sub.textContent = `${h.combos || 0} combos, ${h.roundSeconds || '?'}s round`;
+      sub.textContent = `${h.combos} combos across ${h.segments} segments`;
 
       li.appendChild(main);
       li.appendChild(sub);
@@ -871,258 +790,346 @@
     }
   }
 
-  // Set current user and refresh UI
-  function setCurrentUser(username) {
-    currentUser = users[username];
-    updateAllUIForUser();
-  }
-
   function updateAllUIForUser() {
     if (!currentUser) {
-      // Not logged in
-      settingsCurrentUser.textContent = '–';
-      trainingSubtitle.textContent = 'Login to start a round.';
-      trainingGearLabel.textContent = 'No user';
-      trainingDifficultyLabel.textContent = 'Difficulty: –';
-      trainingModeLabel.textContent = 'Mode: –';
-      roundTimerEl.textContent = '00:00';
+      settingsUser.textContent = '–';
+      trainingSubtitle.textContent = 'Login, adjust settings, then start a session.';
+      chipGear.textContent = 'No user';
+      chipDifficulty.textContent = 'Difficulty: –';
+      chipLength.textContent = '– min';
+      sessionTimerEl.textContent = '00:00';
+      segmentNameEl.textContent = '–';
+      segmentDetailEl.textContent = 'Press “Start session” to generate an interval plan.';
+      segmentProgressEl.textContent = 'Segment – / –';
       comboNumbersEl.textContent = '–';
-      comboTextEl.textContent = 'Press “Start round” to generate combos.';
-      comboCountEl.textContent = 'Combos this round: 0';
+      comboTextEl.textContent = 'Combos appear here during boxing intervals.';
+      comboCountEl.textContent = 'Combos this session: 0';
+      btnStartSession.disabled = true;
+      btnStopSession.disabled = true;
+      feedbackPanel.classList.remove('visible');
       historyList.innerHTML = '';
       historyEmpty.classList.remove('hidden');
-      btnStartRound.disabled = true;
-      btnStopRound.disabled = true;
-      feedbackPanel.classList.remove('visible');
       return;
     }
 
-    settingsCurrentUser.textContent = currentUser.username;
+    settingsUser.textContent = currentUser.username;
 
     gearGloves.checked = !!currentUser.gear.gloves;
     gearBag.checked = !!currentUser.gear.bag;
     gearWeights.checked = !!currentUser.gear.weights;
 
-    const level = clampDifficulty(currentUser.difficultyLevel || 3);
-    difficultySlider.value = String(level);
-    difficultyValue.textContent = String(level);
-    updateDifficultyPreview(level);
+    difficultySlider.value = clampDifficulty(currentUser.difficultyLevel);
+    sessionLengthSlider.value = currentUser.sessionMinutes;
 
-    trainingSubtitle.textContent = 'Press “Start round” for spoken combos.';
-    trainingGearLabel.textContent = gearBag.checked ? 'Bag work' : 'Shadowboxing';
-    trainingDifficultyLabel.textContent = `Difficulty: ${level} / 10`;
-    trainingModeLabel.textContent = gearWeights.checked ? 'Weights: optional' : 'Weights: off';
+    const cfg = getDifficultyConfig(currentUser.difficultyLevel);
+    chipDifficulty.textContent = `Difficulty: ${cfg.level} / 10`;
+    updateDifficultyPreviewUI();
+    updateSessionLengthUI();
+    updateGearChips();
 
-    btnStartRound.disabled = false;
-    btnStopRound.disabled = true;
-
-    combosThisRound = 0;
+    sessionTimerEl.textContent = '00:00';
+    segmentNameEl.textContent = 'Ready';
+    segmentDetailEl.textContent = 'Press “Start session” to begin warm-up.';
+    segmentProgressEl.textContent = 'Segment – / –';
     comboNumbersEl.textContent = '–';
-    comboTextEl.textContent = 'Press “Start round” to generate combos.';
-    comboCountEl.textContent = 'Combos this round: 0';
+    comboTextEl.textContent = 'Combos appear here during boxing intervals.';
+    comboCountEl.textContent = 'Combos this session: 0';
+    combosThisSession = 0;
+
+    btnStartSession.disabled = false;
+    btnStopSession.disabled = true;
     feedbackPanel.classList.remove('visible');
+
     updateHistoryUI();
   }
 
-  // UI navigation
-  function setActiveNav(button) {
-    [navLogin, navSettings, navTraining].forEach(btn => btn.classList.remove('nav-active'));
-    button.classList.add('nav-active');
+  function setCurrentUser(username) {
+    currentUser = users[username];
+    updateAllUIForUser();
   }
 
-  function showLoginView() {
-    viewLogin.classList.remove('hidden');
-    mainGrid.classList.add('hidden');
-    setActiveNav(navLogin);
-  }
-
-  function showMainGrid(target) {
-    if (!currentUser) {
-      showLoginView();
-      return;
-    }
-    viewLogin.classList.add('hidden');
-    mainGrid.classList.remove('hidden');
-    if (target === 'settings') {
-      setActiveNav(navSettings);
-    } else {
-      setActiveNav(navTraining);
-    }
-  }
-
-  // Format seconds as mm:ss
-  function formatSeconds(sec) {
-    const s = Math.max(0, Math.floor(sec));
-    const m = Math.floor(s / 60);
-    const rs = s % 60;
-    return `${String(m).padStart(2,'0')}:${String(rs).padStart(2,'0')}`;
-  }
-
-  // Speak combo
-  function speakCombo(combo) {
-    if (!('speechSynthesis' in window)) return;
-    const text = combo.map(id => punchMap[id]).join(', ');
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.1;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // Generate a combo following rules
+  // -------- Combo logic --------
   function generateCombo(cfg) {
     const len = Math.floor(Math.random() * (cfg.comboMax - cfg.comboMin + 1)) + cfg.comboMin;
     const combo = [];
-    // openers: jabs/lead/uppercut body shots
-    const firstOptions = [1, 9, 3, 5, 7];
-    combo.push(firstOptions[Math.floor(Math.random() * firstOptions.length)]);
+    // first punch: jab or cross only
+    const firstOptions = [1,2];
+    combo.push(firstOptions[Math.floor(Math.random()*firstOptions.length)]);
 
     for (let i = 1; i < len; i++) {
-      const prev = combo[i - 1];
+      const prev = combo[i-1];
       let allowed;
       if (rightPower.includes(prev)) {
-        // After a right-side power shot, avoid another right-side power
+        // after a right power shot don't throw another right power immediately
         allowed = allPunches.filter(p => !rightPower.includes(p));
       } else {
         allowed = allPunches.slice();
       }
-      const next = allowed[Math.floor(Math.random() * allowed.length)];
+      const next = allowed[Math.floor(Math.random()*allowed.length)];
       combo.push(next);
     }
     return combo;
   }
 
   function showCombo(combo) {
-    const nums = combo.join(' – ');
-    const text = combo.map(id => punchMap[id]).join(' – ');
-    comboNumbersEl.textContent = nums;
-    comboTextEl.textContent = text;
-    combosThisRound += 1;
-    comboCountEl.textContent = `Combos this round: ${combosThisRound}`;
+    const numbers = combo.join(' – ');
+    const names = combo.map(n => punchMap[n]).join(' – ');
+    comboNumbersEl.textContent = numbers;
+    comboTextEl.textContent = names;
+    combosThisSession++;
+    comboCountEl.textContent = `Combos this session: ${combosThisSession}`;
+    // Speak numbers only
+    speak(combo.join(', '));
   }
 
-  // Start a training round
-  function startRound() {
-    if (!currentUser) return;
-    if (roundIntervalId || comboIntervalId) return;
+  // -------- Workout plan generation --------
+  // Each segment: { type, label, detail, duration, boxingPaceMultiplier }
+  function buildPlan(totalMinutes, user) {
+    const totalSec = totalMinutes * 60;
+    const plan = [];
 
-    combosThisRound = 0;
-    feedbackPanel.classList.remove('visible');
-    currentDifficultyConfig = getDifficultyConfig(currentUser.difficultyLevel);
+    const warmupSec = Math.min(420, Math.max(180, Math.round(totalSec * 0.25)));
+    let remaining = totalSec;
 
-    currentRoundRemaining = currentDifficultyConfig.roundSec;
-    roundTimerEl.textContent = formatSeconds(currentRoundRemaining);
+    const g = user.gear;
+    const hasGloves = !!g.gloves;
+    const hasBag = !!g.bag;
+    const hasWeights = !!g.weights;
 
-    trainingSubtitle.textContent = 'Round in progress…';
-    trainingDifficultyLabel.textContent = `Difficulty: ${currentDifficultyConfig.level} / 10`;
+    // Helper to push segment
+    function addSegment(type, label, detail, seconds, boxingPaceMultiplier) {
+      if (seconds <= 0) return;
+      plan.push({ type, label, detail, duration: seconds, boxingPaceMultiplier: boxingPaceMultiplier || 1 });
+      remaining -= seconds;
+    }
 
-    btnStartRound.disabled = true;
-    btnStopRound.disabled = false;
+    // Warmup: joint + light movement + light boxing
+    addSegment(
+      'warmup',
+      'Mobility & joint warm-up',
+      'Neck circles, shoulder rolls, hip circles, ankle circles – easy pace.',
+      60
+    );
+    addSegment(
+      'warmup',
+      'Footwork & bouncing',
+      'Light bouncing on the feet, forward/backward steps, relaxed breathing.',
+      60
+    );
 
-    // Timer tick
-    roundIntervalId = setInterval(() => {
-      currentRoundRemaining -= 1;
-      if (currentRoundRemaining <= 0) {
-        currentRoundRemaining = 0;
-        roundTimerEl.textContent = formatSeconds(currentRoundRemaining);
-        endRound('time');
+    const warmBoxSec = warmupSec - 120;
+    if (warmBoxSec > 0) {
+      const label = hasBag && hasGloves ? 'Light bag tapping' : 'Light shadowboxing';
+      const detail = 'Move around, throw easy jabs and crosses, focus on rhythm and breathing.';
+      addSegment('boxing', label, detail, warmBoxSec, 1.5); // slower combos
+    }
+
+    // Work blocks: bodyweight + intense boxing + short rest
+    const blockApproxSec = 45+45+45+60+30; // pushups, situps, squats, boxing, rest
+    // keep a bit of buffer
+    while (remaining >= blockApproxSec + 30) {
+      // bodyweight 1: push-ups
+      const pushLabel = hasWeights ? 'Weighted push-ups / floor press' : 'Push-ups';
+      const pushDetail = 'Controlled reps. If needed, use knees or elevate hands.';
+      addSegment('body', pushLabel, pushDetail, 45);
+
+      // bodyweight 2: sit-ups / core
+      addSegment(
+        'body',
+        'Sit-ups or crunches',
+        'Core work. Control the descent, breathe out on the way up.',
+        45
+      );
+
+      // bodyweight 3: legs
+      const legLabel = hasWeights ? 'Weighted squats / lunges' : 'Bodyweight squats or lunges';
+      const legDetail = 'Stay tall, full range of motion. Quality over speed.';
+      addSegment('body', legLabel, legDetail, 45);
+
+      // boxing: intense
+      let boxLabel;
+      if (hasBag && hasGloves) boxLabel = 'Heavy bag – hard combos';
+      else if (hasGloves) boxLabel = 'Gloved shadowboxing – hard combos';
+      else boxLabel = 'Shadowboxing – hard combos (no gloves)';
+      const boxDetail = 'Go hard but smart: sharp combos, defense, footwork. Keep guard up.';
+      addSegment('boxing', boxLabel, boxDetail, 60, 1);
+
+      // short rest
+      addSegment('rest', 'Rest / walk around', 'Shake out the arms, control your breathing.', 30);
+    }
+
+    // If any time remains, finish with boxing or core finisher
+    if (remaining > 20) {
+      const finisherSec = remaining;
+      let label, detail, type;
+      if (finisherSec >= 45) {
+        type = 'boxing';
+        if (hasBag && hasGloves) label = 'Final bag burst';
+        else if (hasGloves) label = 'Final gloved shadowboxing';
+        else label = 'Final shadowboxing';
+        detail = 'Last round: stay sharp, keep form, finish strong.';
       } else {
-        roundTimerEl.textContent = formatSeconds(currentRoundRemaining);
+        type = 'body';
+        label = 'Core finisher: plank';
+        detail = 'Hold a solid plank; straight line from head to heels.';
+      }
+      addSegment(type, label, detail, finisherSec, 0.9);
+    }
+
+    return plan;
+  }
+
+  // -------- Session engine --------
+  function resetSessionState() {
+    if (sessionTimerId) { clearInterval(sessionTimerId); sessionTimerId = null; }
+    if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    plan = [];
+    currentSegmentIndex = -1;
+    segmentRemaining = 0;
+    sessionRemaining = 0;
+    sessionTotal = 0;
+    combosThisSession = 0;
+    sessionTimerEl.textContent = '00:00';
+    comboNumbersEl.textContent = '–';
+    comboTextEl.textContent = 'Combos appear here during boxing intervals.';
+    comboCountEl.textContent = 'Combos this session: 0';
+    segmentNameEl.textContent = 'Ready';
+    segmentDetailEl.textContent = 'Press “Start session” to begin warm-up.';
+    segmentProgressEl.textContent = 'Segment – / –';
+    feedbackPanel.classList.remove('visible');
+  }
+
+  function startSession() {
+    if (!currentUser) return;
+    resetSessionState();
+
+    const minutes = currentUser.sessionMinutes;
+    plan = buildPlan(minutes, currentUser);
+    if (!plan.length) return;
+
+    sessionTotal = plan.reduce((sum, s) => sum + s.duration, 0);
+    sessionRemaining = sessionTotal;
+
+    trainingSubtitle.textContent = 'Session running… intervals are automatic.';
+    btnStartSession.disabled = true;
+    btnStopSession.disabled = false;
+
+    // Start first segment immediately
+    startNextSegment();
+
+    sessionTimerEl.textContent = formatSeconds(sessionRemaining);
+    sessionTimerId = setInterval(() => {
+      sessionRemaining--;
+      if (sessionRemaining < 0) sessionRemaining = 0;
+      sessionTimerEl.textContent = formatSeconds(sessionRemaining);
+      if (sessionRemaining <= 0) {
+        endSession();
       }
     }, 1000);
-
-    // First combo immediately
-    const combo = generateCombo(currentDifficultyConfig);
-    showCombo(combo);
-    speakCombo(combo);
-
-    // Next combos based on pace
-    comboIntervalId = setInterval(() => {
-      if (!currentDifficultyConfig || currentRoundRemaining <= 0) return;
-      const c = generateCombo(currentDifficultyConfig);
-      showCombo(c);
-      speakCombo(c);
-    }, currentDifficultyConfig.paceSec * 1000);
   }
 
-  // Stop round manually
-  function stopRoundManual() {
-    if (!currentUser) return;
-    if (!roundIntervalId && !comboIntervalId) return;
-    endRound('manual');
-  }
+  function startNextSegment() {
+    if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
 
-  // End round, reason: 'time' or 'manual'
-  function endRound(reason) {
-    if (roundIntervalId) {
-      clearInterval(roundIntervalId);
-      roundIntervalId = null;
+    currentSegmentIndex++;
+    if (currentSegmentIndex >= plan.length) {
+      endSession();
+      return;
     }
-    if (comboIntervalId) {
-      clearInterval(comboIntervalId);
-      comboIntervalId = null;
-    }
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    const seg = plan[currentSegmentIndex];
+    segmentRemaining = seg.duration;
 
-    btnStartRound.disabled = false;
-    btnStopRound.disabled = true;
+    segmentNameEl.textContent = seg.label;
+    segmentDetailEl.textContent = seg.detail;
+    segmentProgressEl.textContent = `Segment ${currentSegmentIndex + 1} / ${plan.length}`;
+    comboContainer.style.opacity = seg.type === 'boxing' ? '1' : '0.4';
 
-    if (!currentDifficultyConfig) return;
+    // Announce new segment
+    speak(`Next: ${seg.label}`);
 
-    if (reason === 'time') {
-      trainingSubtitle.textContent = 'Round finished. Log your feedback.';
+    // Boxing segments: start combo loop
+    if (seg.type === 'boxing') {
+      const cfgBase = getDifficultyConfig(currentUser.difficultyLevel);
+      const pace = cfgBase.paceSec * seg.boxingPaceMultiplier;
+      const firstCombo = generateCombo(cfgBase);
+      showCombo(firstCombo);
+      if (comboTimerId) clearInterval(comboTimerId);
+      comboTimerId = setInterval(() => {
+        if (segmentRemaining <= 0) return;
+        const c = generateCombo(cfgBase);
+        showCombo(c);
+      }, pace * 1000);
     } else {
-      trainingSubtitle.textContent = 'Round stopped. Log your feedback if you want.';
+      comboNumbersEl.textContent = '–';
+      comboTextEl.textContent = 'No combos in this segment – focus on the exercise.';
     }
 
+    // Per-segment countdown
+    const localTimer = setInterval(() => {
+      segmentRemaining--;
+      if (segmentRemaining <= 0) {
+        clearInterval(localTimer);
+        startNextSegment();
+      }
+    }, 1000);
+  }
+
+  function endSession() {
+    if (sessionTimerId) { clearInterval(sessionTimerId); sessionTimerId = null; }
+    if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    btnStartSession.disabled = false;
+    btnStopSession.disabled = true;
+
+    sessionRemaining = 0;
+    sessionTimerEl.textContent = formatSeconds(0);
+    trainingSubtitle.textContent = 'Session finished. Log your feedback.';
+    segmentNameEl.textContent = 'Done';
+    segmentDetailEl.textContent = 'Walk around, breathe, sip water.';
     feedbackNote.textContent =
-      `You did ${combosThisRound} combos in ~${currentDifficultyConfig.roundSec}s at level ${currentDifficultyConfig.level}. Choose how it felt.`;
+      `You trained for ~${currentUser.sessionMinutes} minutes across ${plan.length} segments `
+      + `and threw ${combosThisSession} combos.`;
     feedbackPanel.classList.add('visible');
   }
 
-  // Apply feedback: 'easy', 'just', 'hard'
+  function stopSessionManual() {
+    if (!currentUser) return;
+    if (!sessionTimerId && !comboTimerId) return;
+    endSession();
+  }
+
   function applyFeedback(feedback) {
-    if (!currentUser || !currentDifficultyConfig) return;
+    if (!currentUser) return;
+    const before = clampDifficulty(currentUser.difficultyLevel);
+    let after = before;
+    if (feedback === 'easy') after = clampDifficulty(before + 1);
+    if (feedback === 'hard') after = clampDifficulty(before - 1);
+    currentUser.difficultyLevel = after;
 
-    let level = clampDifficulty(currentUser.difficultyLevel);
-    if (feedback === 'easy') level = clampDifficulty(level + 1);
-    if (feedback === 'hard') level = clampDifficulty(level - 1);
-
-    currentUser.difficultyLevel = level;
     currentUser.history.push({
       date: new Date().toISOString(),
       feedback,
-      levelAfter: level,
-      combos: combosThisRound,
-      roundSeconds: currentDifficultyConfig.roundSec
+      levelAfter: after,
+      minutes: currentUser.sessionMinutes,
+      combos: combosThisSession,
+      segments: plan.length
     });
-
     saveUsers();
-    feedbackNote.textContent = `Saved feedback "${feedback}". Next rounds will use level ${level}.`;
-    feedbackPanel.classList.remove('visible');
+
+    feedbackNote.textContent =
+      `Saved feedback "${feedback}". Difficulty is now level ${after}.`;
     updateAllUIForUser();
   }
 
-  // Event listeners
-  navLogin.addEventListener('click', () => {
-    showLoginView();
-  });
-
-  navSettings.addEventListener('click', () => {
-    showMainGrid('settings');
-  });
-
-  navTraining.addEventListener('click', () => {
-    showMainGrid('training');
-  });
+  // -------- Event wiring --------
+  navLogin.addEventListener('click', showLoginView);
+  navSettings.addEventListener('click', () => showMainView('settings'));
+  navTraining.addEventListener('click', () => showMainView('training'));
 
   navLogout.addEventListener('click', () => {
     currentUser = null;
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
-    stopRoundManual();
+    resetSessionState();
     showLoginView();
     updateAllUIForUser();
   });
@@ -1137,56 +1144,54 @@
     }
     setCurrentUser(username);
     usernameInput.value = '';
-    showMainGrid('training');
+    showMainView('training');
   });
 
   usernameInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      btnLogin.click();
-    }
+    if (e.key === 'Enter') btnLogin.click();
   });
 
   gearGloves.addEventListener('change', () => {
     if (!currentUser) return;
     currentUser.gear.gloves = gearGloves.checked;
     saveUsers();
+    updateGearChips();
   });
 
   gearBag.addEventListener('change', () => {
     if (!currentUser) return;
     currentUser.gear.bag = gearBag.checked;
     saveUsers();
-    trainingGearLabel.textContent = gearBag.checked ? 'Bag work' : 'Shadowboxing';
+    updateGearChips();
   });
 
   gearWeights.addEventListener('change', () => {
     if (!currentUser) return;
     currentUser.gear.weights = gearWeights.checked;
     saveUsers();
-    trainingModeLabel.textContent = gearWeights.checked ? 'Weights: optional' : 'Weights: off';
+    updateGearChips();
   });
 
   difficultySlider.addEventListener('input', () => {
     if (!currentUser) return;
-    if (roundIntervalId || comboIntervalId) {
-      difficultySlider.value = String(currentUser.difficultyLevel);
-      return;
-    }
-    const level = clampDifficulty(difficultySlider.value);
-    currentUser.difficultyLevel = level;
-    difficultyValue.textContent = String(level);
-    updateDifficultyPreview(level);
-    trainingDifficultyLabel.textContent = `Difficulty: ${level} / 10`;
+    const lvl = clampDifficulty(difficultySlider.value);
+    currentUser.difficultyLevel = lvl;
     saveUsers();
+    const cfg = getDifficultyConfig(lvl);
+    chipDifficulty.textContent = `Difficulty: ${cfg.level} / 10`;
+    updateDifficultyPreviewUI();
   });
 
-  btnStartRound.addEventListener('click', () => {
-    startRound();
+  sessionLengthSlider.addEventListener('input', () => {
+    if (!currentUser) return;
+    const mins = parseInt(sessionLengthSlider.value, 10) || 20;
+    currentUser.sessionMinutes = mins;
+    saveUsers();
+    updateSessionLengthUI();
   });
 
-  btnStopRound.addEventListener('click', () => {
-    stopRoundManual();
-  });
+  btnStartSession.addEventListener('click', startSession);
+  btnStopSession.addEventListener('click', stopSessionManual);
 
   feedbackButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1196,12 +1201,10 @@
   });
 
   window.addEventListener('beforeunload', () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   });
 
-  // Initialise
+  // -------- Init --------
   loadUsers();
   updateAllUIForUser();
   showLoginView();
