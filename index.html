@@ -506,6 +506,7 @@
           <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
             <button id="btn-start-session" class="btn btn-primary" disabled>Start session</button>
             <button id="btn-stop-session" class="btn btn-ghost" disabled>Stop</button>
+            <button id="btn-skip-segment" class="btn btn-ghost" disabled>Skip exercise</button>
           </div>
 
           <div class="feedback-panel" id="feedback-panel">
@@ -519,8 +520,9 @@
           </div>
 
           <div class="small" style="margin-top:10px;">
-            Combos always start with jab (1) or cross (2) and avoid back-to-back right-side power shots (2,4,6,8,10).
-            The app reads the numbers out loud (“1, 2, 3…”) so you can memorise your own number system.
+            Combos always start with jab (1) or cross (2), switch weight by alternating between odd and even punches,
+            and avoid back-to-back right-side power shots (2,4,6,8,10). Jab (1) is allowed to repeat once (1–1), but not 1–1–1.
+            The app reads the <strong>numbers</strong> out loud (“1, 2, 3…”) so you can train by your own number system.
           </div>
         </section>
 
@@ -558,6 +560,7 @@
   let sessionTotal = 0;
   let sessionTimerId = null;
   let comboTimerId = null;
+  let segmentTimerId = null;
   let combosThisSession = 0;
 
   // Punch logic
@@ -617,6 +620,7 @@
 
   const btnStartSession = document.getElementById('btn-start-session');
   const btnStopSession = document.getElementById('btn-stop-session');
+  const btnSkipSegment = document.getElementById('btn-skip-segment');
 
   const feedbackPanel = document.getElementById('feedback-panel');
   const feedbackNote = document.getElementById('feedback-note');
@@ -666,7 +670,7 @@
     else if (l <= 8) { comboMin = 4; comboMax = 5; }
     else { comboMin = 5; comboMax = 6; }
 
-    let paceSec = 4 - (l - 1) * 0.25;      // 4s → ~1.6s
+    let paceSec = 4 - (l - 1) * 0.25;      // 4s → ~1.5s
     paceSec = Math.max(1.5, Math.min(4, paceSec));
     return { level: l, comboMin, comboMax, paceSec };
   }
@@ -806,6 +810,7 @@
       comboCountEl.textContent = 'Combos this session: 0';
       btnStartSession.disabled = true;
       btnStopSession.disabled = true;
+      btnSkipSegment.disabled = true;
       feedbackPanel.classList.remove('visible');
       historyList.innerHTML = '';
       historyEmpty.classList.remove('hidden');
@@ -838,6 +843,7 @@
 
     btnStartSession.disabled = false;
     btnStopSession.disabled = true;
+    btnSkipSegment.disabled = true;
     feedbackPanel.classList.remove('visible');
 
     updateHistoryUI();
@@ -858,14 +864,29 @@
 
     for (let i = 1; i < len; i++) {
       const prev = combo[i-1];
-      let allowed;
+      const prevParity = prev % 2;
+      let candidates = allPunches.slice();
+
+      // right-power constraint
       if (rightPower.includes(prev)) {
-        // after a right power shot don't throw another right power immediately
-        allowed = allPunches.filter(p => !rightPower.includes(p));
-      } else {
-        allowed = allPunches.slice();
+        candidates = candidates.filter(p => !rightPower.includes(p));
       }
-      const next = allowed[Math.floor(Math.random()*allowed.length)];
+
+      candidates = candidates.filter(p => {
+        if (p === 1) {
+          // allow jab repeat max twice in a row
+          if (prev === 1 && combo[i-2] === 1) return false; // would be 3rd jab
+          return true;
+        }
+        // otherwise must alternate parity (weight shift)
+        return (p % 2) !== prevParity;
+      });
+
+      if (!candidates.length) {
+        candidates = allPunches.slice();
+      }
+
+      const next = candidates[Math.floor(Math.random()*candidates.length)];
       combo.push(next);
     }
     return combo;
@@ -896,14 +917,13 @@
     const hasBag = !!g.bag;
     const hasWeights = !!g.weights;
 
-    // Helper to push segment
     function addSegment(type, label, detail, seconds, boxingPaceMultiplier) {
       if (seconds <= 0) return;
       plan.push({ type, label, detail, duration: seconds, boxingPaceMultiplier: boxingPaceMultiplier || 1 });
       remaining -= seconds;
     }
 
-    // Warmup: joint + light movement + light boxing
+    // Warmup
     addSegment(
       'warmup',
       'Mobility & joint warm-up',
@@ -921,19 +941,15 @@
     if (warmBoxSec > 0) {
       const label = hasBag && hasGloves ? 'Light bag tapping' : 'Light shadowboxing';
       const detail = 'Move around, throw easy jabs and crosses, focus on rhythm and breathing.';
-      addSegment('boxing', label, detail, warmBoxSec, 1.5); // slower combos
+      addSegment('boxing', label, detail, warmBoxSec, 1.5);
     }
 
-    // Work blocks: bodyweight + intense boxing + short rest
-    const blockApproxSec = 45+45+45+60+30; // pushups, situps, squats, boxing, rest
-    // keep a bit of buffer
+    const blockApproxSec = 45+45+45+60+30;
     while (remaining >= blockApproxSec + 30) {
-      // bodyweight 1: push-ups
       const pushLabel = hasWeights ? 'Weighted push-ups / floor press' : 'Push-ups';
       const pushDetail = 'Controlled reps. If needed, use knees or elevate hands.';
       addSegment('body', pushLabel, pushDetail, 45);
 
-      // bodyweight 2: sit-ups / core
       addSegment(
         'body',
         'Sit-ups or crunches',
@@ -941,12 +957,10 @@
         45
       );
 
-      // bodyweight 3: legs
       const legLabel = hasWeights ? 'Weighted squats / lunges' : 'Bodyweight squats or lunges';
       const legDetail = 'Stay tall, full range of motion. Quality over speed.';
       addSegment('body', legLabel, legDetail, 45);
 
-      // boxing: intense
       let boxLabel;
       if (hasBag && hasGloves) boxLabel = 'Heavy bag – hard combos';
       else if (hasGloves) boxLabel = 'Gloved shadowboxing – hard combos';
@@ -954,11 +968,9 @@
       const boxDetail = 'Go hard but smart: sharp combos, defense, footwork. Keep guard up.';
       addSegment('boxing', boxLabel, boxDetail, 60, 1);
 
-      // short rest
       addSegment('rest', 'Rest / walk around', 'Shake out the arms, control your breathing.', 30);
     }
 
-    // If any time remains, finish with boxing or core finisher
     if (remaining > 20) {
       const finisherSec = remaining;
       let label, detail, type;
@@ -983,6 +995,7 @@
   function resetSessionState() {
     if (sessionTimerId) { clearInterval(sessionTimerId); sessionTimerId = null; }
     if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
+    if (segmentTimerId) { clearInterval(segmentTimerId); segmentTimerId = null; }
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     plan = [];
     currentSegmentIndex = -1;
@@ -998,6 +1011,7 @@
     segmentDetailEl.textContent = 'Press “Start session” to begin warm-up.';
     segmentProgressEl.textContent = 'Segment – / –';
     feedbackPanel.classList.remove('visible');
+    btnSkipSegment.disabled = true;
   }
 
   function startSession() {
@@ -1014,8 +1028,8 @@
     trainingSubtitle.textContent = 'Session running… intervals are automatic.';
     btnStartSession.disabled = true;
     btnStopSession.disabled = false;
+    btnSkipSegment.disabled = false;
 
-    // Start first segment immediately
     startNextSegment();
 
     sessionTimerEl.textContent = formatSeconds(sessionRemaining);
@@ -1031,6 +1045,7 @@
 
   function startNextSegment() {
     if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
+    if (segmentTimerId) { clearInterval(segmentTimerId); segmentTimerId = null; }
 
     currentSegmentIndex++;
     if (currentSegmentIndex >= plan.length) {
@@ -1045,16 +1060,13 @@
     segmentProgressEl.textContent = `Segment ${currentSegmentIndex + 1} / ${plan.length}`;
     comboContainer.style.opacity = seg.type === 'boxing' ? '1' : '0.4';
 
-    // Announce new segment
     speak(`Next: ${seg.label}`);
 
-    // Boxing segments: start combo loop
     if (seg.type === 'boxing') {
       const cfgBase = getDifficultyConfig(currentUser.difficultyLevel);
       const pace = cfgBase.paceSec * seg.boxingPaceMultiplier;
       const firstCombo = generateCombo(cfgBase);
       showCombo(firstCombo);
-      if (comboTimerId) clearInterval(comboTimerId);
       comboTimerId = setInterval(() => {
         if (segmentRemaining <= 0) return;
         const c = generateCombo(cfgBase);
@@ -1065,11 +1077,11 @@
       comboTextEl.textContent = 'No combos in this segment – focus on the exercise.';
     }
 
-    // Per-segment countdown
-    const localTimer = setInterval(() => {
+    segmentTimerId = setInterval(() => {
       segmentRemaining--;
       if (segmentRemaining <= 0) {
-        clearInterval(localTimer);
+        clearInterval(segmentTimerId);
+        segmentTimerId = null;
         startNextSegment();
       }
     }, 1000);
@@ -1078,9 +1090,11 @@
   function endSession() {
     if (sessionTimerId) { clearInterval(sessionTimerId); sessionTimerId = null; }
     if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
+    if (segmentTimerId) { clearInterval(segmentTimerId); segmentTimerId = null; }
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     btnStartSession.disabled = false;
     btnStopSession.disabled = true;
+    btnSkipSegment.disabled = true;
 
     sessionRemaining = 0;
     sessionTimerEl.textContent = formatSeconds(0);
@@ -1095,8 +1109,16 @@
 
   function stopSessionManual() {
     if (!currentUser) return;
-    if (!sessionTimerId && !comboTimerId) return;
+    if (!sessionTimerId && !comboTimerId && !segmentTimerId) return;
     endSession();
+  }
+
+  function skipCurrentSegment() {
+    if (!currentUser) return;
+    if (!plan.length || currentSegmentIndex < 0 || currentSegmentIndex >= plan.length) return;
+    if (segmentTimerId) { clearInterval(segmentTimerId); segmentTimerId = null; }
+    if (comboTimerId) { clearInterval(comboTimerId); comboTimerId = null; }
+    startNextSegment();
   }
 
   function applyFeedback(feedback) {
@@ -1192,6 +1214,7 @@
 
   btnStartSession.addEventListener('click', startSession);
   btnStopSession.addEventListener('click', stopSessionManual);
+  btnSkipSegment.addEventListener('click', skipCurrentSegment);
 
   feedbackButtons.forEach(btn => {
     btn.addEventListener('click', () => {
